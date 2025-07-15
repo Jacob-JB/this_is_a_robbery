@@ -2,7 +2,17 @@ use bevy::prelude::*;
 use nevy::*;
 use serde::{Deserialize, Serialize};
 
-pub fn add_protocol(app: &mut App) {
+pub fn build(app: &mut App) {
+    app.add_plugins((
+        NevyPlugin::default(),
+        NevyHeaderPlugin::default(),
+        NevyMessagesPlugin::default(),
+    ));
+
+    app.insert_resource(MessageStreamHeader::new(StreamHeader::Messages));
+
+    app.add_systems(PostUpdate, log_connection_status.after(UpdateEndpoints));
+
     app.add_message::<PingMessage>();
 }
 

@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use common::networking::PingMessage;
+use common::{CommonPlugin, networking::PingMessage};
 use nevy::*;
 
 pub mod networking;
@@ -12,6 +12,8 @@ fn main() {
         level: bevy::log::Level::DEBUG,
         ..default()
     });
+
+    app.add_plugins(CommonPlugin);
 
     networking::build(&mut app);
 

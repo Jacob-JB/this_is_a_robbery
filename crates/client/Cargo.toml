@@ -4,8 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+common.path = "../common"
+
 bevy = { workspace = true, features = ["wayland"] }
 log.workspace = true
+
 nevy.workspace = true
-common.path = "../common"
 rustls.workspace = true
+
+avian3d.workspace = true

@@ -1,24 +1,15 @@
 use bevy::prelude::*;
-use common::networking::{StreamHeader, add_protocol};
 use nevy::*;
 
 pub fn build(app: &mut App) {
-    app.add_plugins((
-        NevyPlugin::default(),
-        NevyHeaderPlugin::default(),
-        NevyMessagesPlugin::default(),
-    ));
-
-    app.insert_resource(MessageStreamHeader::new(StreamHeader::Messages));
-
-    add_protocol(app);
-
     app.add_systems(Startup, spawn_endpoint);
-    app.add_systems(Update, common::networking::log_connection_status);
 }
 
 #[derive(Component)]
 pub struct ClientEndpoint;
+
+#[derive(Component)]
+pub struct ClientConnection;
 
 fn spawn_endpoint(mut commands: Commands) -> Result {
     commands.spawn((

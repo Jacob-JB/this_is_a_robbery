@@ -1649,6 +1649,7 @@ dependencies = [
 name = "client"
 version = "0.1.0"
 dependencies = [
+ "avian3d",
  "bevy",
  "common",
  "log",
@@ -4329,6 +4330,7 @@ dependencies = [
 name = "server"
 version = "0.1.0"
 dependencies = [
+ "avian3d",
  "bevy",
  "common",
  "log",

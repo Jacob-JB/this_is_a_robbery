@@ -1,9 +1,12 @@
-use std::time::Duration;
-
+use avian3d::prelude::*;
 use bevy::prelude::*;
-use common::networking::{PingMessage, StreamHeader};
-use nevy::*;
+use common::{CommonPlugin, GameLayer};
 
+use crate::networking::ClientConnection;
+
+pub mod camera;
+pub mod character;
+pub mod input;
 pub mod networking;
 
 fn main() {
@@ -16,18 +19,20 @@ fn main() {
         ..default()
     }));
 
-    networking::build(&mut app);
+    app.add_plugins(CommonPlugin);
 
-    app.add_shared_sender::<PingSender>();
+    app.add_plugins(PhysicsDebugPlugin::default());
+
+    networking::build(&mut app);
+    input::build(&mut app);
+    character::build(&mut app);
+    camera::build(&mut app);
 
     app.add_systems(PostStartup, debug_connect_to_server);
-    app.add_systems(Update, debug_send_ping);
+    app.add_systems(Startup, spawn_debug_floor);
 
     app.run();
 }
-
-#[derive(Component)]
-pub struct ClientConnection;
 
 fn debug_connect_to_server(
     mut commands: Commands,
@@ -48,38 +53,11 @@ fn debug_connect_to_server(
     Ok(())
 }
 
-pub struct PingSender;
-
-fn debug_send_ping(
-    connection_q: Query<(Entity, &ConnectionStatus), With<ClientConnection>>,
-    time: Res<Time>,
-    mut last_ping: Local<Duration>,
-    message_id: Res<MessageId<PingMessage>>,
-    mut sender: SharedMessageSender<PingSender>,
-) -> Result {
-    if time.elapsed() - *last_ping < Duration::from_millis(1000) {
-        return Ok(());
-    }
-
-    *last_ping = time.elapsed();
-
-    for (connection_entity, status) in &connection_q {
-        let ConnectionStatus::Established = status else {
-            continue;
-        };
-
-        info!("Sending ping on {}", connection_entity);
-
-        sender.write(
-            StreamHeader::Messages,
-            connection_entity,
-            *message_id,
-            true,
-            &PingMessage {
-                message: "Hello Server!".into(),
-            },
-        )?;
-    }
-
-    Ok(())
+fn spawn_debug_floor(mut commands: Commands) {
+    commands.spawn((
+        Collider::half_space(Vec3::Y),
+        RigidBody::Static,
+        Position(Vec3::ZERO),
+        CollisionLayers::new(GameLayer::World, 0),
+    ));
 }
