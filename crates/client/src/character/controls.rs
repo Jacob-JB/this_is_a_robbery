@@ -1,6 +1,6 @@
 use avian3d::prelude::*;
 use bevy::{input::mouse::MouseMotion, prelude::*};
-use common::{GameLayer, character::CharacterInput};
+use common::{GameLayer, character::controller::CharacterInput};
 
 use crate::{character::LocalPlayer, input::ControlScheme};
 

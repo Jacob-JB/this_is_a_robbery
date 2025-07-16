@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use common::networking::StreamHeader;
 use nevy::*;
 
 pub fn build(app: &mut App) {

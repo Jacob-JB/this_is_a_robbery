@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{ecs::system::SystemParam, prelude::*};
 use nevy::*;
 
 pub fn build(app: &mut App) {
@@ -25,6 +25,32 @@ fn spawn_endpoint(mut commands: Commands) -> Result {
     ));
 
     Ok(())
+}
+
+/// Queries the [ClientConnection] to drain messages.
+#[derive(SystemParam)]
+pub struct ClientMessages<'w, 's, T>
+where
+    T: Send + Sync + 'static,
+{
+    connection_q: Query<'w, 's, &'static mut ReceivedMessages<T>, With<ClientConnection>>,
+}
+
+impl<'w, 's, T> ClientMessages<'w, 's, T>
+where
+    T: Send + Sync + 'static,
+{
+    pub fn drain(&mut self) -> impl Iterator<Item = T> + '_ {
+        let mut messages = Vec::new();
+
+        if let Ok(mut received_messages) = self.connection_q.single_mut() {
+            for message in received_messages.drain() {
+                messages.push(message);
+            }
+        }
+
+        messages.into_iter()
+    }
 }
 
 pub fn create_connection_config() -> nevy::quinn_proto::ClientConfig {

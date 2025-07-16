@@ -3,7 +3,7 @@ use bevy::{
     prelude::*,
     window::{CursorGrabMode, PrimaryWindow},
 };
-use common::character::CharacterInput;
+use common::character::controller::CharacterInput;
 
 use crate::character::LocalPlayer;
 

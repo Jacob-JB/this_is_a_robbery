@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use nevy::*;
-use serde::{Deserialize, Serialize};
 
 pub fn build(app: &mut App) {
     app.add_plugins((
@@ -12,8 +11,6 @@ pub fn build(app: &mut App) {
     app.insert_resource(MessageStreamHeader::new(StreamHeader::Messages));
 
     app.add_systems(PostUpdate, log_connection_status.after(UpdateEndpoints));
-
-    app.add_message::<PingMessage>();
 }
 
 pub enum StreamHeader {
@@ -60,9 +57,4 @@ pub fn log_connection_status(
     }
 
     Ok(())
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct PingMessage {
-    pub message: String,
 }

@@ -8,6 +8,9 @@ pub mod camera;
 pub mod character;
 pub mod input;
 pub mod networking;
+pub mod physics_replication;
+pub mod server_entity_map;
+pub mod state;
 
 fn main() {
     let mut app = App::new();
@@ -24,6 +27,9 @@ fn main() {
     app.add_plugins(PhysicsDebugPlugin::default());
 
     networking::build(&mut app);
+    state::build(&mut app);
+    server_entity_map::build(&mut app);
+    physics_replication::build(&mut app);
     input::build(&mut app);
     character::build(&mut app);
     camera::build(&mut app);
