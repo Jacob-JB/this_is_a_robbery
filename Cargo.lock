@@ -1655,6 +1655,7 @@ dependencies = [
  "log",
  "nevy",
  "rustls",
+ "serde",
 ]
 
 [[package]]
@@ -3043,7 +3044,7 @@ dependencies = [
 [[package]]
 name = "nevy"
 version = "0.1.0-dev"
-source = "git+https://github.com/space-bandits/nevy#31f600b2d54e47e6e65ac55d5bac723223e620f7"
+source = "git+https://github.com/space-bandits/nevy#046139fc2804cf41f967efdc67d5e7ea57654b44"
 dependencies = [
  "bevy",
  "bincode",
@@ -3687,7 +3688,7 @@ dependencies = [
  "concurrent-queue",
  "hermit-abi",
  "pin-project-lite",
- "rustix 1.0.7",
+ "rustix 1.0.8",
  "tracing",
  "windows-sys 0.59.0",
 ]
@@ -4155,15 +4156,15 @@ dependencies = [
 
 [[package]]
 name = "rustix"
-version = "1.0.7"
+version = "1.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c71e83d6afe7ff64890ec6b71d6a69bb8a610ab78ce364b3352876bb4c801266"
+checksum = "11181fbabf243db407ef8df94a6ce0b2f9a733bd8be4ad02b4eda9602296cac8"
 dependencies = [
  "bitflags 2.9.1",
  "errno",
  "libc",
  "linux-raw-sys 0.9.4",
- "windows-sys 0.59.0",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]

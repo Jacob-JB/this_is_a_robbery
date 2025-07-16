@@ -2,7 +2,7 @@ use avian3d::prelude::*;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::GameLayer;
+use crate::character::Character;
 
 const PLAYER_ACCELERATION: f32 = 75.;
 const PLAYER_MOVE_SPEED: f32 = 5.;
@@ -23,20 +23,19 @@ pub fn build(app: &mut App) {
     );
 }
 
-#[derive(Component)]
+#[derive(Component, Default)]
 #[require(
+    Character,
     CharacterInput,
-    Collider::capsule_endpoints(0.125, Vec3::Y * 0.125, Vec3::Y * 0.875),
     RigidBody::Kinematic,
-    IntegratedCharacterPosition,
-    CollisionLayers::new(GameLayer::Players, GameLayer::World),
+    IntegratedCharacterPosition
 )]
-pub struct Character;
+pub struct CharacterController;
 
 /// The input state for a character
 ///
 /// Used to simulate a character both on the client and for prediction on the server
-#[derive(Component, Serialize, Deserialize)]
+#[derive(Clone, Copy, Component, Serialize, Deserialize)]
 pub struct CharacterInput {
     pub move_forward: bool,
     pub move_backward: bool,
@@ -120,7 +119,7 @@ fn integrate_character(
             &Collider,
             &CollisionLayers,
         ),
-        With<Character>,
+        With<CharacterController>,
     >,
     time: Res<Time>,
     spatial_query: SpatialQuery,

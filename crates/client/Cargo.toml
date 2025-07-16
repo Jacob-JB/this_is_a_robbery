@@ -10,6 +10,7 @@ bevy = { workspace = true, features = ["wayland"] }
 log.workspace = true
 
 nevy.workspace = true
+serde.workspace = true
 rustls.workspace = true
 
 avian3d.workspace = true

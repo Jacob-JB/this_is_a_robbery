@@ -6,6 +6,7 @@ members = ["crates/*"]
 bevy = "0.16.1"
 nevy.git = "https://github.com/space-bandits/nevy"
 # nevy.path = "../nevy"
+serde = "1.0"
 log = "*"
 rustls = { version = "0.23.5", default-features = false, features = ["std"] }
 avian3d = "0.3"

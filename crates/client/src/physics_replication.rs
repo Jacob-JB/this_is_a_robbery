@@ -4,7 +4,7 @@ use avian3d::prelude::*;
 use bevy::prelude::*;
 use common::physics::*;
 
-use crate::{networking::ClientMessages, server_entity_map::ServerEntityMap};
+use crate::{networking::params::ClientMessages, server_entity_map::ServerEntityMap};
 
 pub fn build(app: &mut App) {
     app.init_resource::<PhysicsTimeEstimate>();
@@ -213,6 +213,7 @@ fn queue_interpolation(
 }
 
 fn interpolate_bodies(
+    mut gizmos: Gizmos<PhysicsGizmos>,
     interpolate_values: Res<InterpolateValues>,
     mut body_q: Query<(&SnapshotInterpolation, &mut Position, &mut Rotation)>,
 ) {
@@ -234,7 +235,27 @@ fn interpolate_bodies(
         // spherical linear interpolation for rotation
         rotation.0 = start
             .rotation
-            .slerp(end.rotation, interpolate_values.interpolate_percent)
+            .slerp(end.rotation, interpolate_values.interpolate_percent);
+
+        for time in 0..10 {
+            let a = hermite(
+                time as f32 / 10.0,
+                start.position,
+                start.linear_velocity * interpolate_values.velocity_scale,
+                end.position,
+                end.linear_velocity * interpolate_values.velocity_scale,
+            );
+
+            let b = hermite(
+                (time + 1) as f32 / 10.0,
+                start.position,
+                start.linear_velocity * interpolate_values.velocity_scale,
+                end.position,
+                end.linear_velocity * interpolate_values.velocity_scale,
+            );
+
+            gizmos.line(a, b, bevy::color::palettes::css::BLUE);
+        }
     }
 }
 

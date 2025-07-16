@@ -1,6 +1,6 @@
 use avian3d::prelude::*;
 use bevy::prelude::*;
-use common::{CommonPlugin, GameLayer};
+use common::CommonPlugin;
 
 use crate::networking::ClientConnection;
 
@@ -35,7 +35,6 @@ fn main() {
     camera::build(&mut app);
 
     app.add_systems(PostStartup, debug_connect_to_server);
-    app.add_systems(Startup, spawn_debug_floor);
 
     app.run();
 }
@@ -57,13 +56,4 @@ fn debug_connect_to_server(
     ));
 
     Ok(())
-}
-
-fn spawn_debug_floor(mut commands: Commands) {
-    commands.spawn((
-        Collider::half_space(Vec3::Y),
-        RigidBody::Static,
-        Position(Vec3::ZERO),
-        CollisionLayers::new(GameLayer::World, 0),
-    ));
 }

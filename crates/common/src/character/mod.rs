@@ -1,13 +1,21 @@
+use avian3d::prelude::*;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::ServerEntity;
+use crate::{GameLayer, ServerEntity, character::controller::CharacterInput};
 
 pub mod controller;
 
 pub fn build(app: &mut App) {
     controller::build(app);
 }
+
+#[derive(Component, Default)]
+#[require(
+    Collider::capsule_endpoints(0.125, Vec3::Y * 0.125, Vec3::Y * 0.875),
+    CollisionLayers::new(GameLayer::Players, GameLayer::World),
+)]
+pub struct Character;
 
 /// Server -> Client message to initialize a new character.
 #[derive(Serialize, Deserialize)]
@@ -21,4 +29,13 @@ pub struct SpawnCharacter {
 #[derive(Serialize, Deserialize)]
 pub struct SetLocalPlayer {
     pub server_entity: ServerEntity,
+}
+
+/// Client -> Server message to update a character's transform and input state.
+#[derive(Serialize, Deserialize, Default)]
+pub struct CharacterStateUpdate {
+    pub position: Vec3,
+    pub velocity: Vec3,
+    pub rotation: Quat,
+    pub input: CharacterInput,
 }

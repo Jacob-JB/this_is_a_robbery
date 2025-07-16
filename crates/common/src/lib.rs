@@ -1,4 +1,4 @@
-use avian3d::{PhysicsPlugins, prelude::PhysicsLayer};
+use avian3d::{PhysicsPlugins, prelude::*};
 use bevy::prelude::*;
 use nevy::AddMessage;
 use serde::{Deserialize, Serialize};
@@ -23,6 +23,9 @@ impl Plugin for CommonPlugin {
         app.add_message::<physics::TimeSample>();
         app.add_message::<character::SpawnCharacter>();
         app.add_message::<character::SetLocalPlayer>();
+        app.add_message::<character::CharacterStateUpdate>();
+
+        app.add_systems(Startup, spawn_debug_floor);
     }
 }
 
@@ -58,4 +61,13 @@ pub enum GameLayer {
     /// Used on client for colliders that can block
     /// or receive interaction from the player camera
     Interaction,
+}
+
+fn spawn_debug_floor(mut commands: Commands) {
+    commands.spawn((
+        Collider::half_space(Vec3::Y),
+        RigidBody::Static,
+        Position(Vec3::ZERO),
+        CollisionLayers::new(GameLayer::World, 0),
+    ));
 }
