@@ -4,6 +4,7 @@ use nevy::AddMessage;
 use serde::{Deserialize, Serialize};
 
 pub mod character;
+pub mod level;
 pub mod networking;
 pub mod physics;
 pub mod state;
@@ -24,6 +25,7 @@ impl Plugin for CommonPlugin {
         app.add_message::<character::SpawnCharacter>();
         app.add_message::<character::SetLocalPlayer>();
         app.add_message::<character::CharacterStateUpdate>();
+        app.add_message::<DebugStartLevel>();
 
         app.add_systems(Startup, spawn_debug_floor);
     }
@@ -71,3 +73,6 @@ fn spawn_debug_floor(mut commands: Commands) {
         CollisionLayers::new(GameLayer::World, 0),
     ));
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct DebugStartLevel;

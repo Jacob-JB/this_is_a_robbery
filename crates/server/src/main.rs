@@ -1,7 +1,9 @@
 use bevy::{prelude::*, render::mesh::MeshPlugin, scene::ScenePlugin};
 use common::CommonPlugin;
 
+pub mod agents;
 pub mod character;
+pub mod level;
 pub mod networking;
 pub mod physics_replication;
 pub mod state;
@@ -28,6 +30,8 @@ fn main() {
     state::build(&mut app);
     physics_replication::build(&mut app);
     character::build(&mut app);
+    agents::build(&mut app);
+    level::build(&mut app);
 
     app.run();
 }

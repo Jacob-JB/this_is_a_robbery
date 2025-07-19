@@ -14,3 +14,5 @@ rustls.workspace = true
 rcgen = "0.13.1"
 
 avian3d.workspace = true
+
+bevy_landmass = "0.9"
