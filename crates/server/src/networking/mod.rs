@@ -1,5 +1,9 @@
+use std::net::{Ipv4Addr, SocketAddrV4};
+
 use bevy::prelude::*;
 use nevy::*;
+
+use crate::config::ServerConfig;
 
 pub fn build(app: &mut App) {
     app.add_systems(Startup, spawn_endpoint);
@@ -8,13 +12,15 @@ pub fn build(app: &mut App) {
 #[derive(Component)]
 pub struct ServerEndpoint;
 
-fn spawn_endpoint(mut commands: Commands) -> Result {
+fn spawn_endpoint(mut commands: Commands, config: Res<ServerConfig>) -> Result {
     commands.spawn((
         ServerEndpoint,
         EndpointWithHeaderedConnections,
         EndpointWithMessageConnections,
         QuicEndpoint::new(
-            "0.0.0.0:27518",
+            SocketAddrV4::new("0.0.0.0".parse().unwrap(), config.bind_port),
+            // SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, config.bind_port),
+            // "0.0.0.0:27518",
             quinn_proto::EndpointConfig::default(),
             Some(create_server_endpoint_config()),
             AlwaysAcceptIncoming::new(),

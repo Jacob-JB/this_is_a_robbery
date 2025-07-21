@@ -1,5 +1,6 @@
 use avian3d::prelude::*;
 use bevy::prelude::*;
+use nevy::AddMessage;
 use serde::{Deserialize, Serialize};
 
 use crate::{GameLayer, ServerEntity, character::controller::CharacterInput};
@@ -8,11 +9,15 @@ pub mod controller;
 
 pub fn build(app: &mut App) {
     controller::build(app);
+
+    app.add_message::<SpawnCharacter>();
+    app.add_message::<SetLocalPlayer>();
+    app.add_message::<CharacterStateUpdate>();
 }
 
 #[derive(Component, Default)]
 #[require(
-    Collider::capsule_endpoints(0.125, Vec3::Y * 0.125, Vec3::Y * 0.875),
+    Collider::capsule_endpoints(0.25, Vec3::Y * 0.25, Vec3::Y * 1.75),
     CollisionLayers::new(GameLayer::Players, GameLayer::World),
 )]
 pub struct Character;

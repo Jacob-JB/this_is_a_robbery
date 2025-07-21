@@ -6,6 +6,7 @@ use crate::networking::ClientConnection;
 
 pub mod camera;
 pub mod character;
+pub mod elements;
 pub mod input;
 pub mod networking;
 pub mod physics_replication;
@@ -20,6 +21,9 @@ fn main() {
         filter: bevy::log::DEFAULT_FILTER.to_string()
             + ",bevy_render=info,bevy_app=info,offset_allocator=info,bevy_asset=info,gilrs=info,bevy_winit=info",
         ..default()
+    }).set(AssetPlugin {
+        file_path: "../../assets".into(),
+        ..default()
     }));
 
     app.add_plugins(CommonPlugin);
@@ -33,6 +37,7 @@ fn main() {
     input::build(&mut app);
     character::build(&mut app);
     camera::build(&mut app);
+    elements::build(&mut app);
 
     app.add_systems(PostStartup, debug_connect_to_server);
 
@@ -45,12 +50,18 @@ fn debug_connect_to_server(
 ) -> Result {
     let endpoint_entity = endpoint_q.single()?;
 
+    let address = std::env::args()
+        .nth(1)
+        .expect("Expected server address as first argument")
+        .parse()
+        .expect("Invalid server address");
+
     commands.spawn((
         ClientConnection,
         nevy::ConnectionOf(endpoint_entity),
         nevy::QuicConnectionConfig {
             client_config: networking::create_connection_config(),
-            address: "127.0.0.1:27518".parse().unwrap(),
+            address,
             server_name: "example.server".to_string(),
         },
     ));

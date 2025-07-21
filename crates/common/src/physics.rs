@@ -1,9 +1,15 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
+use nevy::AddMessage;
 use serde::{Deserialize, Serialize};
 
 use crate::ServerEntity;
+
+pub fn build(app: &mut App) {
+    app.add_message::<PhysicsSnapshot>();
+    app.add_message::<TimeSample>();
+}
 
 /// Physics snapshot sent from server to client.
 #[derive(Serialize, Deserialize)]

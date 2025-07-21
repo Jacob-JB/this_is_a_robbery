@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 pub mod character;
 pub mod editor;
+pub mod elements;
 pub mod level;
 pub mod networking;
 pub mod physics;
@@ -19,13 +20,10 @@ impl Plugin for CommonPlugin {
 
         networking::build(app);
         character::build(app);
+        physics::build(app);
+        state::build(app);
+        elements::build(app);
 
-        app.add_message::<state::JoinGameRequest>();
-        app.add_message::<physics::PhysicsSnapshot>();
-        app.add_message::<physics::TimeSample>();
-        app.add_message::<character::SpawnCharacter>();
-        app.add_message::<character::SetLocalPlayer>();
-        app.add_message::<character::CharacterStateUpdate>();
         app.add_message::<DebugStartLevel>();
 
         app.add_systems(Startup, spawn_debug_floor);

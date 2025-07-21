@@ -15,7 +15,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Plane"
+			"name":"NavMesh"
 		}
 	],
 	"meshes":[

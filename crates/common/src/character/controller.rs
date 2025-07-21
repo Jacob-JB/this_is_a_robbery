@@ -5,9 +5,9 @@ use serde::{Deserialize, Serialize};
 use crate::character::Character;
 
 const PLAYER_ACCELERATION: f32 = 75.;
-const PLAYER_MOVE_SPEED: f32 = 5.;
+const PLAYER_MOVE_SPEED: f32 = 3.;
 const MAX_INTEGRATE_ITERATIONS: usize = 20;
-const PLAYER_COLLISION_MARGIN: f32 = 0.0005;
+const PLAYER_COLLISION_MARGIN: f32 = 0.002;
 
 pub fn build(app: &mut App) {
     app.add_systems(
@@ -142,7 +142,7 @@ fn integrate_character(
                 break;
             };
 
-            let max_distance = remaining_time * velocity.length();
+            let integrate_distance = remaining_time * velocity.length();
 
             let hit = spatial_query
                 .shape_hits(
@@ -152,7 +152,7 @@ fn integrate_character(
                     direction,
                     u32::MAX,
                     &ShapeCastConfig {
-                        max_distance,
+                        max_distance: integrate_distance,
                         ..default()
                     },
                     // &SpatialQueryFilter::from_mask([GameLayer::World])
@@ -164,7 +164,7 @@ fn integrate_character(
                 .next();
 
             let Some(hit) = hit else {
-                position += direction * max_distance;
+                position += direction * integrate_distance;
                 break;
             };
 

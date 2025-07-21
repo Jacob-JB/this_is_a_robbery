@@ -20,6 +20,7 @@ impl<'w, 's, C> InitializePairs<'w, 's, C>
 where
     C: Component,
 {
+    /// Returns pairs of (client, entity).
     pub fn iter(&self) -> impl Iterator<Item = (Entity, Entity)> + '_ {
         InitializePairsIter {
             queries: self,

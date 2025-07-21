@@ -7,7 +7,7 @@ use common::character::controller::CharacterInput;
 
 use crate::character::LocalPlayer;
 
-const PLAYER_CAMERA_OFFSET: Vec3 = Vec3::new(0., 0.8, 0.);
+const PLAYER_CAMERA_OFFSET: Vec3 = Vec3::new(0., 1.8, 0.);
 
 pub fn build(app: &mut App) {
     app.add_systems(Startup, spawn_main_camera);

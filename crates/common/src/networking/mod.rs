@@ -1,12 +1,16 @@
 use bevy::prelude::*;
 use nevy::*;
 
+pub mod replicate_despawn;
+
 pub fn build(app: &mut App) {
     app.add_plugins((
         NevyPlugin::default(),
         NevyHeaderPlugin::default(),
         NevyMessagesPlugin::default(),
     ));
+
+    replicate_despawn::build(app);
 
     app.insert_resource(MessageStreamHeader::new(StreamHeader::Messages));
 
