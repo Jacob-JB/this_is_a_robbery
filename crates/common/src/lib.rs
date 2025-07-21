@@ -4,6 +4,7 @@ use nevy::AddMessage;
 use serde::{Deserialize, Serialize};
 
 pub mod character;
+pub mod editor;
 pub mod level;
 pub mod networking;
 pub mod physics;

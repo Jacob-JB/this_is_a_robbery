@@ -1,0 +1,13 @@
+[package]
+name = "editor"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+common.path = "../common"
+
+bevy.workspace = true
+
+bevy-inspector-egui = "0.32"
+bevy_egui = "0.35"
+egui_dock = "0.16"
