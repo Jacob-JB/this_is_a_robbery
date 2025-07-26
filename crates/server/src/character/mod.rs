@@ -15,13 +15,9 @@ use crate::{
 };
 
 pub fn build(app: &mut App) {
-    app.add_systems(
-        Update,
-        (
-            receive_character_updates,
-            (spawn_characters, initliaze_characters).chain(),
-        ),
-    );
+    app.add_systems(Update, (receive_character_updates, spawn_characters));
+
+    app.add_systems(PostUpdate, initliaze_characters.before(UpdateEndpoints));
 }
 
 #[derive(Component, Deref)]

@@ -18,9 +18,7 @@ fn spawn_endpoint(mut commands: Commands, config: Res<ServerConfig>) -> Result {
         EndpointWithHeaderedConnections,
         EndpointWithMessageConnections,
         QuicEndpoint::new(
-            SocketAddrV4::new("0.0.0.0".parse().unwrap(), config.bind_port),
-            // SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, config.bind_port),
-            // "0.0.0.0:27518",
+            SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, config.bind_port),
             quinn_proto::EndpointConfig::default(),
             Some(create_server_endpoint_config()),
             AlwaysAcceptIncoming::new(),

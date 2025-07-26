@@ -8,7 +8,11 @@ use nevy::*;
 use crate::{replicate_despawn::ReplicateDespawn, state::initialize_pairs::InitializePairs};
 
 pub fn build(app: &mut App) {
-    app.add_systems(Update, (insert_gltf_colliders, replicate_gltf_colliders));
+    app.add_systems(Update, insert_gltf_colliders);
+    app.add_systems(
+        PostUpdate,
+        initialize_gltf_colliders.before(UpdateEndpoints),
+    );
 }
 
 /// Used to load a gltf mesh on the server.
@@ -30,7 +34,7 @@ fn insert_gltf_colliders(
     }
 }
 
-fn replicate_gltf_colliders(
+fn initialize_gltf_colliders(
     pairs: InitializePairs<GltfColliderPath>,
     gltf_colliders: Query<&GltfColliderPath>,
     mut messages: LocalMessageSender,

@@ -4,6 +4,7 @@ use common::CommonPlugin;
 
 use crate::networking::ClientConnection;
 
+pub mod agents;
 pub mod camera;
 pub mod character;
 pub mod elements;
@@ -38,6 +39,7 @@ fn main() {
     character::build(&mut app);
     camera::build(&mut app);
     elements::build(&mut app);
+    agents::build(&mut app);
 
     app.add_systems(PostStartup, debug_connect_to_server);
 

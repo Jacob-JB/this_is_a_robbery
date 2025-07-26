@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use nevy::AddMessage;
 use serde::{Deserialize, Serialize};
 
+pub mod agents;
 pub mod character;
 pub mod editor;
 pub mod elements;
@@ -23,6 +24,7 @@ impl Plugin for CommonPlugin {
         physics::build(app);
         state::build(app);
         elements::build(app);
+        agents::build(app);
 
         app.add_message::<DebugStartLevel>();
 

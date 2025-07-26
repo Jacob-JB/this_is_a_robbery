@@ -1,6 +1,6 @@
 use avian3d::prelude::*;
 use bevy::prelude::*;
-use nevy::AddMessage;
+use nevy::*;
 use serde::{Deserialize, Serialize};
 
 use crate::{GameLayer, ServerEntity, character::controller::CharacterInput};

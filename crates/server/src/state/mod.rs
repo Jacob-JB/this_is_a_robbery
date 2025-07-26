@@ -5,7 +5,7 @@ use nevy::*;
 pub mod initialize_pairs;
 
 pub fn build(app: &mut App) {
-    app.add_systems(Update, (accept_join_requests, remove_closed_clients));
+    app.add_systems(PreUpdate, (accept_join_requests, remove_closed_clients));
 }
 
 /// Marker component for connection entities that have joined the game and should receive game updates.
