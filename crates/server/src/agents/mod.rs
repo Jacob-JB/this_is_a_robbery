@@ -7,17 +7,22 @@ use common::{
 };
 use nevy::*;
 
-use crate::{physics_replication::ReplicateBody, state::initialize_pairs::InitializePairs};
+use crate::{
+    agents::navigation::NavMeshPath, physics_replication::ReplicateBody,
+    state::initialize_pairs::InitializePairs,
+};
 
-pub mod nav_mesh;
+pub mod navigation;
+pub mod tasks;
 
 pub fn build(app: &mut App) {
-    nav_mesh::build(app);
+    navigation::build(app);
+    tasks::build(app);
 
     app.add_systems(Update, init_agents);
     app.add_systems(PostUpdate, initialize_agents.before(UpdateEndpoints));
 
-    app.add_systems(Startup, debug_spawn_agents);
+    app.add_systems(Startup, (debug_spawn_nav_mesh, debug_spawn_agents));
     app.add_systems(Update, debug_set_agent_target);
 }
 
@@ -47,6 +52,10 @@ fn initialize_agents(
     }
 
     Ok(())
+}
+
+fn debug_spawn_nav_mesh(mut commands: Commands) {
+    commands.spawn(NavMeshPath("bank_nav_mesh.gltf#Mesh0/Primitive0".into()));
 }
 
 fn debug_spawn_agents(mut commands: Commands) {

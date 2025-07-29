@@ -61,6 +61,8 @@ pub enum GameLayer {
     World,
     /// Players
     Players,
+    /// Agents
+    Agents,
     /// Used on client for colliders that can block
     /// or receive interaction from the player camera
     Interaction,

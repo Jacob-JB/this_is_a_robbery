@@ -4966,6 +4966,7 @@ dependencies = [
  "common",
  "log",
  "nevy",
+ "rand 0.9.2",
  "rcgen",
  "rustls",
 ]

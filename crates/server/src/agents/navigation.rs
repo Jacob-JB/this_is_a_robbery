@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use bevy_landmass::{
     Agent3d, AgentDesiredVelocity3d, AgentOptions, AgentSettings, AgentTarget3d, Archipelago3d,
     ArchipelagoRef3d, FromAgentRadius, Island, Landmass3dPlugin, NavMesh3d, NavMeshHandle,
-    Velocity3d, nav_mesh::bevy_mesh_to_landmass_nav_mesh,
+    NavMeshHandle3d, Velocity3d, nav_mesh::bevy_mesh_to_landmass_nav_mesh,
 };
 
 use common::agents::Agent;
@@ -51,7 +51,7 @@ fn spawn_archipelago(mut commands: Commands) {
 
 fn load_nav_meshes(
     mut commands: Commands,
-    mesh_q: Query<(Entity, &NavMeshPath), Without<ConvertNavMesh>>,
+    mesh_q: Query<(Entity, &NavMeshPath), Without<NavMeshHandle3d>>,
     archipelago_q: Query<Entity, With<MainArchipelago>>,
     assets: Res<AssetServer>,
     nav_meshes: ResMut<Assets<NavMesh3d>>,
@@ -82,6 +82,7 @@ fn convert_nav_meshes(
 ) {
     for (entity, convert) in mesh_q.iter() {
         let Some(mesh) = meshes.get(&convert.mesh) else {
+            debug!("no nav mesh yet");
             continue;
         };
 
@@ -96,6 +97,8 @@ fn convert_nav_meshes(
                         type_index_to_node_type: default(),
                     },
                 );
+
+                debug!("Loaded nav mesh on {}", entity);
             }
             Err(err) => {
                 error!("Failed to validate nav mesh on {}: {}", entity, err);
@@ -138,7 +141,7 @@ fn update_agent_velocities(
     time: Res<Time>,
 ) {
     for (mut linear_velocity, mut velocity, target_velocity) in agent_q.iter_mut() {
-        debug!("target velocity is {}", target_velocity.velocity());
+        // debug!("target velocity is {}", target_velocity.velocity());
 
         let difference = target_velocity.velocity() - **linear_velocity;
 
