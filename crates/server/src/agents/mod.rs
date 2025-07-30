@@ -13,11 +13,13 @@ use crate::{
 };
 
 pub mod navigation;
+pub mod patrolling;
 pub mod tasks;
 
 pub fn build(app: &mut App) {
     navigation::build(app);
     tasks::build(app);
+    patrolling::build(app);
 
     app.add_systems(Update, init_agents);
     app.add_systems(PostUpdate, initialize_agents.before(UpdateEndpoints));
