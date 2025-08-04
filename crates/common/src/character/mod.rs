@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use nevy::*;
 use serde::{Deserialize, Serialize};
 
-use crate::{GameLayer, ServerEntity, character::controller::CharacterInput};
+use crate::{character::controller::CharacterInput, GameLayer, ServerEntity};
 
 pub mod controller;
 
@@ -18,7 +18,7 @@ pub fn build(app: &mut App) {
 #[derive(Component, Default)]
 #[require(
     Collider::capsule_endpoints(0.25, Vec3::Y * 0.25, Vec3::Y * 1.75),
-    CollisionLayers::new(GameLayer::Players, GameLayer::World),
+    CollisionLayers::new([GameLayer::Players, GameLayer::Opaque], GameLayer::World),
 )]
 pub struct Character;
 

@@ -56,16 +56,17 @@ impl From<ServerEntity> for Entity {
 
 #[derive(Default, PhysicsLayer)]
 pub enum GameLayer {
-    /// Mostly static elements that players collide with
+    /// Mostly static elements that players collide with.
     #[default]
     World,
-    /// Players
+    /// Players.
     Players,
-    /// Agents
+    /// Agents.
     Agents,
-    /// Used on client for colliders that can block
-    /// or receive interaction from the player camera
+    /// Thigns that can block or receive interaction from the player camera.
     Interaction,
+    /// Things that agents cannot see through.
+    Opaque,
 }
 
 fn spawn_debug_floor(mut commands: Commands) {
@@ -73,7 +74,7 @@ fn spawn_debug_floor(mut commands: Commands) {
         Collider::half_space(Vec3::Y),
         RigidBody::Static,
         Position(Vec3::ZERO),
-        CollisionLayers::new(GameLayer::World, 0),
+        CollisionLayers::new([GameLayer::World, GameLayer::Opaque], 0),
     ));
 }
 

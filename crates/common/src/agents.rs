@@ -12,7 +12,7 @@ pub fn build(app: &mut App) {
 #[derive(Component)]
 #[require(
     Collider::capsule_endpoints(0.25, Vec3::Y * 0.25, Vec3::Y * 1.75),
-    CollisionLayers::new([GameLayer::Agents], 0),
+    CollisionLayers::new([GameLayer::Agents, GameLayer::Opaque], 0),
     Transform,
     Position,
     Rotation,

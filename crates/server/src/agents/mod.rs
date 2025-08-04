@@ -1,31 +1,39 @@
-use bevy::prelude::*;
-use bevy_landmass::AgentTarget3d;
+use bevy::{platform::collections::HashSet, prelude::*};
 use common::{
     agents::{Agent, InitializeAgent},
-    character::Character,
     networking::StreamHeader,
 };
 use nevy::*;
 
 use crate::{
-    agents::navigation::NavMeshPath, physics_replication::ReplicateBody,
+    agents::{
+        investigation::AgentInvestigationState,
+        navigation::NavMeshPath,
+        patrolling::{PatrolPoint, PatrolTask},
+        sight::AgentEyes,
+        tasks::{AvailableTasks, TaskPriority},
+    },
+    physics_replication::ReplicateBody,
     state::initialize_pairs::InitializePairs,
 };
 
+pub mod investigation;
 pub mod navigation;
 pub mod patrolling;
+pub mod sight;
 pub mod tasks;
 
 pub fn build(app: &mut App) {
     navigation::build(app);
+    sight::build(app);
     tasks::build(app);
     patrolling::build(app);
+    investigation::build(app);
 
     app.add_systems(Update, init_agents);
     app.add_systems(PostUpdate, initialize_agents.before(UpdateEndpoints));
 
     app.add_systems(Startup, (debug_spawn_nav_mesh, debug_spawn_agents));
-    app.add_systems(Update, debug_set_agent_target);
 }
 
 fn init_agents(mut commands: Commands, agent_q: Query<Entity, Added<Agent>>) {
@@ -61,18 +69,36 @@ fn debug_spawn_nav_mesh(mut commands: Commands) {
 }
 
 fn debug_spawn_agents(mut commands: Commands) {
-    commands.spawn(Agent);
-}
+    // -2 0 0
+    // -1.5 0 -7.5
+    // 3.5 0 -5
 
-fn debug_set_agent_target(
-    mut agent_q: Query<&mut AgentTarget3d>,
-    character_q: Query<&Transform, With<Character>>,
-) {
-    let Ok(character_transform) = character_q.single() else {
-        return;
-    };
+    let points = vec![
+        commands
+            .spawn((PatrolPoint::default(), Transform::from_xyz(-2., 0., 0.)))
+            .id(),
+        commands
+            .spawn((PatrolPoint::default(), Transform::from_xyz(-1.5, 0., -7.5)))
+            .id(),
+        commands
+            .spawn((PatrolPoint::default(), Transform::from_xyz(3.5, 0., -5.)))
+            .id(),
+    ];
 
-    for mut agent_target in agent_q.iter_mut() {
-        *agent_target = AgentTarget3d::Point(character_transform.translation);
-    }
+    let task_entity = commands
+        .spawn((PatrolTask { points }, TaskPriority::Idle))
+        .id();
+
+    commands.spawn((
+        Agent,
+        AvailableTasks {
+            tasks: HashSet::from_iter([task_entity].into_iter()),
+        },
+        AgentEyes {
+            offset: Vec3::Y * 1.8,
+            fov: 45f32.to_radians(),
+            range: f32::MAX,
+        },
+        AgentInvestigationState::default(),
+    ));
 }

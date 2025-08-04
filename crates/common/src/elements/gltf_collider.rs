@@ -25,6 +25,7 @@ pub struct InitializeGltfCollider {
 ///
 /// Will use the first primitive of the gltf mesh.
 #[derive(Component)]
+#[require(RigidBody::Static)]
 pub struct GltfCollider(pub Handle<Mesh>);
 
 fn load_mesh_colliders(

@@ -5,19 +5,23 @@ pub fn build(app: &mut App) {
     app.add_systems(Update, assign_tasks);
 }
 
+/// Exists on an agent when they have been assigned to a task.
+///
+/// Use the lifecycle events of this component to trigger state
+/// upadates for starting and stopping tasks.
 #[derive(Component)]
 #[relationship(relationship_target = AssignedAgents)]
 pub struct AssignedTo(pub Entity);
 
 #[derive(Component, Default)]
 #[relationship_target(relationship = AssignedTo)]
-#[require(TaskPriority)]
 pub struct AssignedAgents(Vec<Entity>);
 
 /// The priority of a task.
 /// If the priority of an agents current task is lower than this task,
 /// it will be pulled off that task and assigned to this one.
 #[derive(Component, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[require(AssignedAgents)]
 pub enum TaskPriority {
     #[default]
     Idle,

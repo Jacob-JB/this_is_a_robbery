@@ -10,6 +10,10 @@ use common::{
 use nevy::*;
 
 use crate::{
+    agents::{
+        investigation::InvestigationTarget,
+        sight::{SightCastTarget, SightTarget},
+    },
     physics_replication::ReplicateBody,
     state::{JoinedClient, initialize_pairs::InitializePairs},
 };
@@ -34,6 +38,9 @@ fn spawn_characters(mut commands: Commands, new_clients: Query<Entity, Added<Joi
             CharacterController,
             CharacterOfClient(client_entity),
             ReplicateBody,
+            SightTarget,
+            SightCastTarget,
+            InvestigationTarget,
         ));
     }
 }

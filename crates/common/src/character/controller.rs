@@ -6,7 +6,7 @@ use crate::character::Character;
 
 const PLAYER_ACCELERATION: f32 = 75.;
 const PLAYER_MOVE_SPEED: f32 = 3.;
-const MAX_INTEGRATE_ITERATIONS: usize = 20;
+const MAX_INTEGRATE_ITERATIONS: usize = 50;
 const PLAYER_COLLISION_MARGIN: f32 = 0.002;
 
 pub fn build(app: &mut App) {
@@ -121,6 +121,7 @@ fn integrate_character(
         ),
         With<CharacterController>,
     >,
+    rigid_body_q: Query<(), With<RigidBody>>,
     time: Res<Time>,
     spatial_query: SpatialQuery,
 ) {
@@ -137,7 +138,7 @@ fn integrate_character(
         let mut position = **position;
         let mut remaining_time = time.delta_secs();
 
-        for _ in 0..MAX_INTEGRATE_ITERATIONS {
+        for iteration in 0..MAX_INTEGRATE_ITERATIONS {
             let Ok(direction) = Dir3::new(**velocity) else {
                 break;
             };
@@ -155,11 +156,11 @@ fn integrate_character(
                         max_distance: integrate_distance,
                         ..default()
                     },
-                    // &SpatialQueryFilter::from_mask([GameLayer::World])
                     &SpatialQueryFilter::from_mask(collision_layers.filters)
                         .with_excluded_entities(std::iter::once(player_entity)),
                 )
                 .into_iter()
+                .filter(|hit| rigid_body_q.contains(hit.entity))
                 .filter(|hit| -hit.normal1.dot(direction.into()) > 0.)
                 .next();
 
@@ -175,7 +176,16 @@ fn integrate_character(
             position += direction * hit.distance;
             position += hit_normal * PLAYER_COLLISION_MARGIN;
 
+            // let alignment = velocity.normalize_or_zero().dot(hit_normal).abs();
+            // if alignment < 0.2 {
+            //     debug!("collision alignment: {}", alignment);
+            // }
+
             **velocity = velocity.reject_from(hit_normal);
+
+            if iteration == MAX_INTEGRATE_ITERATIONS - 1 {
+                debug!("Hit iteration limit");
+            }
         }
 
         position_update.0 = position;
